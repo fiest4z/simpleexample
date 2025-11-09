@@ -6,36 +6,34 @@ import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import ru.rsatu.moderntech.zaoch.pojo.dto.UserSave;
-import ru.rsatu.moderntech.zaoch.pojo.dto.UserView;
+import ru.rsatu.moderntech.zaoch.pojo.dto.WatchlistSave;
+import ru.rsatu.moderntech.zaoch.pojo.dto.WatchlistView;
+import ru.rsatu.moderntech.zaoch.pojo.entity.Movie;
 import ru.rsatu.moderntech.zaoch.pojo.entity.User;
-
+import ru.rsatu.moderntech.zaoch.pojo.entity.Watchlist;
 
 
 @Mapper(componentModel = "jakarta")
-
 public abstract class WatchlistMapper {
 
     @Inject
     EntityManager entityManager;
 
-    @Mapping(target = "id", source = "id")
-    @Mapping(target = "username", source = "username")
-    @Mapping(target = "userEmail", source = "userEmail")
-    public abstract UserView toUserView(User user);
+    @Mapping(target = "username", source = "user.username")
+    @Mapping(target = "movieTitle", source = "movie.title")
+    public abstract WatchlistView toWatchlistView(Watchlist from);
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "username", source = "username")
-    @Mapping(target = "userEmail", source = "userEmail")
-    public abstract User toUser(UserSave userSave);
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "movie", ignore = true)
+    public abstract Watchlist toWatchlist(WatchlistSave from);
 
     @AfterMapping
-    protected void updateUserAfterMapping(@MappingTarget User user, UserSave userSave) {
-        if (userSave.getUsername() != null) {
-            user.setUsername(userSave.getUsername());
+    protected void updateWatchlistAfterMapping(@MappingTarget Watchlist db_model, WatchlistSave from) {
+        if (from.getUserId() != null) {
+            db_model.setUser(entityManager.getReference(User.class, from.getUserId()));
         }
-        if (userSave.getUserEmail() != null) {
-            user.setUserEmail(userSave.getUserEmail());
+        if (from.getMovieId() != null) {
+            db_model.setMovie(entityManager.getReference(Movie.class, from.getMovieId()));
         }
     }
 }
