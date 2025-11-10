@@ -25,4 +25,7 @@ public class MovieServ {
     public void save(MovieSave model) {
         rep.save(mapper.toMovie(model));
     }
+    public void delete(Long id) {
+        rep.delete(id);
+    }
 }

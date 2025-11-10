@@ -4,6 +4,7 @@ package ru.rsatu.moderntech.zaoch.resource;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import ru.rsatu.moderntech.zaoch.pojo.dto.MovieSave;
 import ru.rsatu.moderntech.zaoch.pojo.dto.MovieView;
 import ru.rsatu.moderntech.zaoch.service.MovieServ;
@@ -39,4 +40,15 @@ public class MovieRes {
         serv.save(model);
     }
 
+    @DELETE
+    @Path("deleteMovie/{id}")
+    public Response delete(@PathParam("id") Long id) {
+        try {
+            serv.delete(id);
+            return Response.ok().build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
 }
+}
+
