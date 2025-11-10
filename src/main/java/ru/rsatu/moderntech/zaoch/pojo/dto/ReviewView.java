@@ -10,6 +10,8 @@ public class ReviewView {
     private Long id;
     private String username;
     private String movieTitle;
+    private Long userId;
+    private Long movieId;
     private Integer rating;
     private String comment;
 }

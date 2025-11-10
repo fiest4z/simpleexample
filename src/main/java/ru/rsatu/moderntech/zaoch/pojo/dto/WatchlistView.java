@@ -6,9 +6,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class WatchlistView {
-
     private Long id;
+    private Long userId;       // добавляем для редактирования
+    private Long movieId;      // добавляем для редактирования
     private String username;
     private String movieTitle;
     private String status;
 }
+
+

@@ -42,4 +42,22 @@ public class WatchlistRep {
             entityManager.flush();
         }
     }
+    public boolean existsByUserAndMovie(Long userId, Long movieId, Long ignoreId) {
+        String query = "select count(w) from Watchlist w where w.user.id = :userId and w.movie.id = :movieId";
+        if (ignoreId != null) {
+            query += " and w.id <> :ignoreId";
+        }
+        var q = entityManager.createQuery(query, Long.class)
+                .setParameter("userId", userId)
+                .setParameter("movieId", movieId);
+
+        if (ignoreId != null) {
+            q.setParameter("ignoreId", ignoreId);
+        }
+
+        Long count = q.getSingleResult();
+        return count > 0;
+    }
+
+
 }

@@ -12,23 +12,27 @@ import ru.rsatu.moderntech.zaoch.pojo.entity.Movie;
 import ru.rsatu.moderntech.zaoch.pojo.entity.User;
 import ru.rsatu.moderntech.zaoch.pojo.entity.Watchlist;
 
-
 @Mapper(componentModel = "jakarta")
 public abstract class WatchlistMapper {
 
     @Inject
     EntityManager entityManager;
 
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "userId", source = "user.id")
+    @Mapping(target = "movieId", source = "movie.id")
     @Mapping(target = "username", source = "user.username")
     @Mapping(target = "movieTitle", source = "movie.title")
+    @Mapping(target = "status", source = "status")
     public abstract WatchlistView toWatchlistView(Watchlist from);
+
 
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "movie", ignore = true)
     public abstract Watchlist toWatchlist(WatchlistSave from);
 
     @AfterMapping
-    protected void updateWatchlistAfterMapping(@MappingTarget Watchlist db_model, WatchlistSave from) {
+    protected void setEntitiesAfterMapping(@MappingTarget Watchlist db_model, WatchlistSave from) {
         if (from.getUserId() != null) {
             db_model.setUser(entityManager.getReference(User.class, from.getUserId()));
         }
@@ -37,3 +41,4 @@ public abstract class WatchlistMapper {
         }
     }
 }
+

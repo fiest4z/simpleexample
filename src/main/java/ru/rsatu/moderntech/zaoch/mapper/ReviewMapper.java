@@ -2,6 +2,7 @@ package ru.rsatu.moderntech.zaoch.mapper;
 
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -17,18 +18,19 @@ public abstract class ReviewMapper {
     @Inject
     EntityManager entityManager;
 
-    @Mapping(target = "id", source = "id")
+    @Mapping(target = "userId", source = "user.id")
+    @Mapping(target = "movieId", source = "movie.id")
     @Mapping(target = "username", source = "user.username")
     @Mapping(target = "movieTitle", source = "movie.title")
-    @Mapping(target = "rating", source = "rating")
-    @Mapping(target = "comment", source = "comment")
     public abstract ReviewView toReviewView(Review review);
 
-    @Mapping(target = "id", source = "id")
-    @Mapping(target = "rating", source = "rating")
-    @Mapping(target = "comment", source = "comment")
+
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "movie", ignore = true)
     public abstract Review toReview(ReviewSave dto);
 
+    // Настройка сущностей после маппинга ReviewSave → Review
+    @AfterMapping
     protected void setEntitiesAfterMapping(@MappingTarget Review review, ReviewSave dto) {
         if (dto.getUserId() != null) {
             review.setUser(entityManager.getReference(User.class, dto.getUserId()));
@@ -38,3 +40,4 @@ public abstract class ReviewMapper {
         }
     }
 }
+

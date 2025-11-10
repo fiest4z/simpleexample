@@ -24,6 +24,13 @@ public class MovieRes {
         return serv.load();
     }
 
+    @GET
+    @Path("getMovie/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public MovieView getMovie(@PathParam("id") Long id) {
+        return serv.findById(id);
+    }
+
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -37,7 +44,7 @@ public class MovieRes {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("updateMovie")
     public void update(MovieSave model) {
-        serv.save(model);
+        serv.update(model);
     }
 
     @DELETE
@@ -49,6 +56,6 @@ public class MovieRes {
         } catch (Exception e) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-}
+    }
 }
 

@@ -2,9 +2,11 @@ package ru.rsatu.moderntech.zaoch.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import ru.rsatu.moderntech.zaoch.mapper.ReviewMapper;
 import ru.rsatu.moderntech.zaoch.pojo.dto.ReviewSave;
 import ru.rsatu.moderntech.zaoch.pojo.dto.ReviewView;
+import ru.rsatu.moderntech.zaoch.pojo.entity.Review;
 import ru.rsatu.moderntech.zaoch.repository.ReviewRep;
 
 import java.util.List;
@@ -26,4 +28,14 @@ public class ReviewServ {
     public void save(ReviewSave model) {
         rep.save(mapper.toReview(model));
     }
+
+    @Transactional
+    public void delete(Long id) {
+        rep.delete(id);
+    }
+    public ReviewView findById(Long id) {
+        Review review = rep.findById(id);
+        return mapper.toReviewView(review);
+    }
+
 }
