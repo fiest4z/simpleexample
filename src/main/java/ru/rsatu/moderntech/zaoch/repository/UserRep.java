@@ -29,16 +29,41 @@ public class UserRep {
         }
         entityManager.flush();
     }
+
     public User findById(Long id) {
         return entityManager.find(User.class, id);
     }
 
+
     @Transactional
     public void delete(Long id) {
         User user = findById(id);
-        if (user != null) {
-            entityManager.remove(user);
-            entityManager.flush();
+        if (user == null) {
+            throw new IllegalArgumentException("Пользователь с id=" + id + " не найден");
         }
+
+        // Проверка на отзывы
+        Long reviewCount = entityManager.createQuery(
+                        "SELECT COUNT(r) FROM Review r WHERE r.user.id = :id", Long.class)
+                .setParameter("id", id)
+                .getSingleResult();
+
+        if (reviewCount > 0) {
+            throw new IllegalStateException("Нельзя удалить пользователя, который оставил отзывы");
+        }
+
+        // Проверка на watchlist
+        Long watchlistCount = entityManager.createQuery(
+                        "SELECT COUNT(w) FROM Watchlist w WHERE w.user.id = :id", Long.class)
+                .setParameter("id", id)
+                .getSingleResult();
+
+        if (watchlistCount > 0) {
+            throw new IllegalStateException("Нельзя удалить пользователя, у которого есть записи в watchlist");
+        }
+
+        entityManager.remove(user);
+        entityManager.flush();
     }
+
 }

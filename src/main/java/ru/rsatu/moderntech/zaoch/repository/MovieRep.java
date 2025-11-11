@@ -38,9 +38,24 @@ public class MovieRep {
     @Transactional
     public void delete(Long id) {
         Movie movie = findById(id);
-        if (movie != null) {
-            entityManager.remove(movie);
-            entityManager.flush();
+        if (movie == null) {
+            throw new IllegalArgumentException("Фильм с id=" + id + " не найден");
         }
+
+        // Проверяем, есть ли записи в Watchlist, где используется этот фильм
+        Long count = entityManager.createQuery(
+                        "SELECT COUNT(w) FROM Watchlist w WHERE w.movie.id = :id", Long.class)
+                .setParameter("id", id)
+                .getSingleResult();
+
+        if (count > 0) {
+            throw new IllegalStateException("Нельзя удалить фильм, который есть в списках пользователей");
+        }
+
+        entityManager.remove(movie);
+        entityManager.flush();
     }
+
+
+
 }

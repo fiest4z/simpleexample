@@ -52,10 +52,26 @@ public class MovieRes {
     public Response delete(@PathParam("id") Long id) {
         try {
             serv.delete(id);
-            return Response.ok().build();
+            return Response.ok("Фильм удалён").build();
+
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(e.getMessage())
+                    .build();
+
+        } catch (IllegalStateException e) {
+            return Response.status(Response.Status.CONFLICT)
+                    .entity(e.getMessage())
+                    .build();
+
         } catch (Exception e) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.serverError()
+                    .entity("Ошибка при удалении фильма: " + e.getMessage())
+                    .build();
         }
     }
+
+
+
 }
 
