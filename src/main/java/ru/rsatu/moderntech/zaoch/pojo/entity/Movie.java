@@ -14,7 +14,7 @@ public class Movie {
 
     @Getter
     @Setter
-    @Id                                                                                 //уникальный первичный ключ
+    @Id             //уникальный первичный ключ
     @GeneratedValue(strategy = GenerationType.SEQUENCE,
             generator = "movie_id_gen")
     @SequenceGenerator(name = "movie_id_gen",
@@ -44,6 +44,4 @@ public class Movie {
     @Column(name = "description")
     @Comment(value = "Описание")
     private String description;
-
-
 }

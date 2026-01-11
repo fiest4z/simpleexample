@@ -70,8 +70,5 @@ public class MovieRes {
                     .build();
         }
     }
-
-
-
 }
 

@@ -25,12 +25,12 @@ public class User {
     private Long id;
 
     //имя пользователя
-    @Column(name = "username", nullable = false )
+    @Column(name = "username", nullable = false, unique = true)
     @Comment(value = "Имя пользователя")
     private String username;
 
     //электронная почта
-    @Column(name = "user_email", nullable = false)
+    @Column(name = "user_email", nullable = false, unique = true)
     @Comment(value = "Электронная почта")
     private String userEmail;
 

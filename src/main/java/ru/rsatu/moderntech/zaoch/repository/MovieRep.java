@@ -55,7 +55,4 @@ public class MovieRep {
         entityManager.remove(movie);
         entityManager.flush();
     }
-
-
-
 }

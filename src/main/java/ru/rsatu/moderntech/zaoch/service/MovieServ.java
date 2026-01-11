@@ -41,15 +41,6 @@ public class MovieServ {
 
     @Transactional
     public void update(MovieSave model) {
-        Movie existing = rep.findById(model.getId());
-        if (existing != null) {
-            existing.setTitle(model.getTitle());
-            existing.setReleaseYear(model.getReleaseYear());
-            existing.setGenre(model.getGenre());
-            existing.setDescription(model.getDescription());
-            rep.save(existing); // или entityManager.merge(existing);
-        } else {
-            save(model); // если не найден, создать новый
-        }
+        rep.save(mapper.toMovie(model));
     }
 }
