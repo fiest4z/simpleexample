@@ -34,6 +34,17 @@ public class UserRep {
         return entityManager.find(User.class, id);
     }
 
+    public User findByEmail(String email) {
+        return entityManager.createQuery(
+                        "SELECT u FROM User u WHERE u.userEmail = :email",
+                        User.class
+                )
+                .setParameter("email", email)
+                .getResultStream()
+                .findFirst()
+                .orElse(null);
+    }
+
 
     @Transactional
     public void delete(Long id) {

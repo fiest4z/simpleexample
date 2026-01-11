@@ -31,7 +31,24 @@ public class UserServ {
     // Создание или обновление пользователя
     @Transactional
     public void save(UserSave userSave) {
-        User user = mapper.toUser(userSave); // преобразуем DTO в Entity
+
+        // 1. Проверяем email
+        User existingByEmail = rep.findByEmail(userSave.getUserEmail());
+
+        // 2. Если создаём нового
+        if (userSave.getId() == null) {
+            if (existingByEmail != null) {
+                throw new IllegalStateException("Пользователь с таким email уже существует");
+            }
+        }
+        // 3. Если редактируем
+        else {
+            if (existingByEmail != null && !existingByEmail.getId().equals(userSave.getId())) {
+                throw new IllegalStateException("Пользователь с таким email уже существует");
+            }
+        }
+
+        User user = mapper.toUser(userSave);
         rep.save(user);
     }
 
